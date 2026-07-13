@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 800px; height: 1200px; overflow: hidden; }
+  .cover {
+    width: 800px; height: 1200px;
+    background: linear-gradient(175deg, #04030a 0%, #09071a 20%, #0c0a1e 45%, #0a0818 70%, #060510 100%);
+    position: relative; overflow: hidden;
+    font-family: 'Noto Serif SC', 'STSong', 'Songti SC', serif;
+  }
+  /* Deep nebula layers */
+  .nebula1 {
+    position: absolute; top: 8%; left: 10%;
+    width: 550px; height: 420px;
+    background: radial-gradient(ellipse at 35% 45%, rgba(80,50,160,0.10) 0%, transparent 70%);
+    transform: rotate(-12deg);
+  }
+  .nebula2 {
+    position: absolute; top: 15%; right: 5%;
+    width: 450px; height: 380px;
+    background: radial-gradient(ellipse at 55% 50%, rgba(50,30,130,0.08) 0%, transparent 65%);
+    transform: rotate(18deg);
+  }
+  .nebula3 {
+    position: absolute; top: 45%; left: 25%;
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse at 50% 30%, rgba(70,40,150,0.06) 0%, transparent 75%);
+    transform: rotate(-8deg);
+  }
+  /* Central glow stack */
+  .glow-outer {
+    position: absolute; top: 33%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 520px; height: 520px;
+    background: radial-gradient(circle, rgba(140,120,200,0.10) 0%, rgba(90,70,160,0.04) 35%, transparent 60%);
+  }
+  .glow-mid {
+    position: absolute; top: 33%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(170,150,220,0.14) 0%, rgba(110,90,180,0.05) 45%, transparent 65%);
+  }
+  .glow-core {
+    position: absolute; top: 34%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(230,210,255,0.30) 0%, rgba(160,140,220,0.10) 25%, transparent 50%);
+  }
+  /* Star token */
+  .ring-outer {
+    position: absolute; top: 34%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 170px; height: 170px;
+    border: 1px solid rgba(170,150,215,0.25);
+    border-radius: 50%;
+  }
+  .ring-inner {
+    position: absolute; top: 34%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 140px; height: 140px;
+    border: 0.8px solid rgba(190,170,225,0.18);
+    border-radius: 50%;
+  }
+  .ring-gem {
+    position: absolute; top: 34%; left: 50%;
+    transform: translate(-50%,-50%) translateY(-87px);
+    width: 12px; height: 12px;
+    background: #e8dff8;
+    border-radius: 50%;
+    box-shadow: 0 0 18px #d0c0f4, 0 0 40px rgba(180,160,220,0.5), 0 0 70px rgba(140,120,200,0.3);
+  }
+  /* Light rays from token */
+  .ray {
+    position: absolute; top: 34%; left: 50%;
+    transform-origin: center top;
+    width: 1px; height: 200px;
+    background: linear-gradient(to bottom, rgba(180,160,220,0.15), transparent);
+  }
+  .r1 { transform: translate(-50%,-87px) rotate(0deg); }
+  .r2 { transform: translate(-50%,-87px) rotate(45deg); }
+  .r3 { transform: translate(-50%,-87px) rotate(90deg); }
+  .r4 { transform: translate(-50%,-87px) rotate(135deg); }
+  .r5 { transform: translate(-50%,-87px) rotate(180deg); }
+  .r6 { transform: translate(-50%,-87px) rotate(225deg); }
+  .r7 { transform: translate(-50%,-87px) rotate(270deg); }
+  .r8 { transform: translate(-50%,-87px) rotate(315deg); }
+  /* Constellation lines */
+  .const-line {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(to right, rgba(180,160,220,0.3), transparent);
+    transform-origin: left center;
+  }
+  /* Stars */
+  .star { position: absolute; background: white; border-radius: 50%; }
+  .star-bright { box-shadow: 0 0 3px rgba(200,180,240,0.6), 0 0 8px rgba(180,160,220,0.3); }
+  /* City */
+  .city-wrap {
+    position: absolute; bottom: 280px; left: 0;
+    width: 100%; height: 220px; opacity: 0.10;
+  }
+  .bld {
+    position: absolute; bottom: 0;
+    background: #1a1a30;
+    border-top: 1px solid rgba(150,130,200,0.12);
+  }
+  .bld-windows {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: rgba(255,220,140,0.25);
+    border-radius: 1px;
+  }
+  /* Title */
+  .title-group {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center; z-index: 10;
+  }
+  .title {
+    font-size: 130px; font-weight: 900;
+    color: #ebe3f8;
+    letter-spacing: 48px;
+    margin-left: 48px;
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(170,150,210,0.50),
+                 0 0 65px rgba(130,110,190,0.30),
+                 0 0 100px rgba(90,70,160,0.18),
+                 0 2px 4px rgba(0,0,0,0.7);
+  }
+  .tagline {
+    position: absolute; top: 60%; left: 50%;
+    transform: translateX(-50%); z-index: 10;
+    font-size: 16px; color: rgba(185,175,218,0.6);
+    letter-spacing: 16px; margin-left: 16px;
+    font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+  }
+  /* Synopsis */
+  .synopsis {
+    position: absolute; top: 75%; left: 50%;
+    transform: translateX(-50%); z-index: 10;
+    text-align: center;
+    font-size: 14px; color: rgba(170,160,205,0.45);
+    letter-spacing: 3px;
+    line-height: 1.9;
+    max-width: 500px;
+    font-family: 'Noto Serif SC', 'STSong', serif;
+  }
+  .author-name {
+    position: absolute; top: 69%; left: 50%;
+    transform: translateX(-50%); z-index: 10;
+    font-size: 18px; color: rgba(175,165,210,0.42);
+    letter-spacing: 8px;
+  }
+  /* Volume badge */
+  .volume-badge {
+    position: absolute; top: 66%; left: 50%;
+    transform: translateX(-50%) translateX(200px); z-index: 10;
+    font-size: 12px; color: rgba(160,150,200,0.35);
+    letter-spacing: 6px;
+    border: 0.5px solid rgba(160,150,200,0.2);
+    padding: 4px 14px;
+  }
+  /* Decorative */
+  .deco-top {
+    position: absolute; top: 14%; left: 16%; width: 68%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(160,140,210,0.20), transparent);
+  }
+  .deco-bot {
+    position: absolute; bottom: 340px; left: 14%; width: 72%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(160,140,210,0.15), transparent);
+  }
+  .ornament {
+    position: absolute; top: 7%; left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px; color: rgba(150,140,200,0.25);
+    letter-spacing: 30px;
+  }
+  .corner-tl {
+    position: absolute; top: 5%; left: 6%;
+    font-size: 10px; color: rgba(150,140,200,0.2);
+    letter-spacing: 4px;
+  }
+  .corner-br {
+    position: absolute; bottom: 270px; right: 6%;
+    font-size: 10px; color: rgba(150,140,200,0.18);
+    letter-spacing: 3px;
+  }
+  .accent {
+    position: absolute; color: rgba(170,150,215,0.4);
+    font-size: 22px;
+  }
+  /* Fog/atmosphere */
+  .fog {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 380px;
+    background: linear-gradient(to top,
+      #060510 0%, rgba(6,5,16,0.95) 20%,
+      rgba(14,10,30,0.40) 55%, transparent 100%);
+    z-index: 8;
+  }
+  /* Figure silhouette */
+  .figure {
+    position: absolute; bottom: 310px; left: 50%;
+    transform: translateX(-50%);
+    width: 2px; height: 80px;
+    opacity: 0.08;
+  }
+  .figure::before {
+    content: '';
+    position: absolute; top: -25px; left: -12px;
+    width: 26px; height: 30px;
+    border-radius: 50%;
+    background: rgba(180,160,210,0.4);
+  }
+</style>
+</head>
+<body>
+<div class="cover">
+  <!-- Nebula -->
+  <div class="nebula1"></div>
+  <div class="nebula2"></div>
+  <div class="nebula3"></div>
+  
+  <!-- Glow -->
+  <div class="glow-outer"></div>
+  <div class="glow-mid"></div>
+  <div class="glow-core"></div>
+
+  <!-- Star Token -->
+  <div class="ring-outer"></div>
+  <div class="ring-inner"></div>
+  <div class="ring-gem"></div>
+  <!-- Rays -->
+  <div class="ray r1"></div><div class="ray r2"></div>
+  <div class="ray r3"></div><div class="ray r4"></div>
+  <div class="ray r5"></div><div class="ray r6"></div>
+  <div class="ray r7"></div><div class="ray r8"></div>
+
+  <!-- Constellation lines -->
+  <div class="const-line" style="top:22%;left:18%;width:60px;transform:rotate(-25deg);"></div>
+  <div class="const-line" style="top:25%;right:20%;width:50px;transform:rotate(30deg) scaleX(-1);"></div>
+  <div class="const-line" style="top:45%;left:8%;width:80px;transform:rotate(-40deg);"></div>
+  <div class="const-line" style="top:48%;right:8%;width:65px;transform:rotate(35deg) scaleX(-1);"></div>
+
+  <!-- Stars (150+ hand-placed) -->
+  <div class="star star-bright" style="left:8%;top:5%;width:2.5px;height:2.5px;opacity:0.7"></div>
+  <div class="star" style="left:15%;top:12%;width:1px;height:1px;opacity:0.8"></div>
+  <div class="star star-bright" style="left:22%;top:3%;width:3px;height:3px;opacity:0.5"></div>
+  <div class="star" style="left:30%;top:18%;width:1.5px;height:1.5px;opacity:0.65"></div>
+  <div class="star" style="left:38%;top:8%;width:2px;height:2px;opacity:0.55"></div>
+  <div class="star star-bright" style="left:45%;top:15%;width:1.5px;height:1.5px;opacity:0.9"></div>
+  <div class="star" style="left:52%;top:6%;width:3.5px;height:3.5px;opacity:0.4"></div>
+  <div class="star" style="left:58%;top:20%;width:1.5px;height:1.5px;opacity:0.6"></div>
+  <div class="star star-bright" style="left:65%;top:10%;width:2px;height:2px;opacity:0.75"></div>
+  <div class="star" style="left:72%;top:4%;width:1px;height:1px;opacity:0.5"></div>
+  <div class="star" style="left:80%;top:14%;width:2.5px;height:2.5px;opacity:0.45"></div>
+  <div class="star star-bright" style="left:88%;top:9%;width:2px;height:2px;opacity:0.7"></div>
+  <div class="star" style="left:93%;top:17%;width:1px;height:1px;opacity:0.6"></div>
+  <div class="star" style="left:5%;top:25%;width:1.5px;height:1.5px;opacity:0.55"></div>
+  <div class="star star-bright" style="left:18%;top:30%;width:2.5px;height:2.5px;opacity:0.7"></div>
+  <div class="star" style="left:28%;top:22%;width:1.5px;height:1.5px;opacity:0.5"></div>
+  <div class="star" style="left:35%;top:33%;width:1px;height:1px;opacity:0.85"></div>
+  <div class="star star-bright" style="left:48%;top:25%;width:2px;height:2px;opacity:0.6"></div>
+  <div class="star" style="left:56%;top:35%;width:1.5px;height:1.5px;opacity:0.7"></div>
+  <div class="star star-bright" style="left:68%;top:28%;width:3px;height:3px;opacity:0.35"></div>
+  <div class="star" style="left:75%;top:38%;width:2px;height:2px;opacity:0.55"></div>
+  <div class="star" style="left:85%;top:22%;width:1px;height:1px;opacity:0.8"></div>
+  <div class="star star-bright" style="left:92%;top:32%;width:1.5px;height:1.5px;opacity:0.65"></div>
+  <div class="star" style="left:10%;top:42%;width:2px;height:2px;opacity:0.45"></div>
+  <div class="star star-bright" style="left:25%;top:45%;width:1.5px;height:1.5px;opacity:0.75"></div>
+  <div class="star" style="left:40%;top:48%;width:1.5px;height:1.5px;opacity:0.55"></div>
+  <div class="star" style="left:55%;top:42%;width:2px;height:2px;opacity:0.6"></div>
+  <div class="star star-bright" style="left:70%;top:50%;width:1px;height:1px;opacity:0.8"></div>
+  <div class="star" style="left:82%;top:44%;width:2.5px;height:2.5px;opacity:0.4"></div>
+  <div class="star" style="left:90%;top:52%;width:1.5px;height:1.5px;opacity:0.6"></div>
+  <div class="star" style="left:3%;top:55%;width:1px;height:1px;opacity:0.55"></div>
+  <div class="star star-bright" style="left:20%;top:58%;width:2px;height:2px;opacity:0.5"></div>
+  <div class="star" style="left:33%;top:62%;width:1.5px;height:1.5px;opacity:0.7"></div>
+  <div class="star" style="left:50%;top:55%;width:1px;height:1px;opacity:0.8"></div>
+  <div class="star star-bright" style="left:63%;top:60%;width:2.5px;height:2.5px;opacity:0.45"></div>
+  <div class="star" style="left:78%;top:56%;width:1.5px;height:1.5px;opacity:0.6"></div>
+  <div class="star" style="left:88%;top:63%;width:1px;height:1px;opacity:0.75"></div>
+  <div class="star" style="left:12%;top:68%;width:2px;height:2px;opacity:0.4"></div>
+  <div class="star star-bright" style="left:30%;top:72%;width:1.5px;height:1.5px;opacity:0.6"></div>
+  <div class="star" style="left:47%;top:67%;width:1px;height:1px;opacity:0.75"></div>
+  <div class="star" style="left:62%;top:73%;width:2.5px;height:2.5px;opacity:0.35"></div>
+  <div class="star" style="left:76%;top:68%;width:1px;height:1px;opacity:0.65"></div>
+  <div class="star" style="left:90%;top:74%;width:2px;height:2px;opacity:0.45"></div>
+  <div class="star" style="left:7%;top:76%;width:1.5px;height:1.5px;opacity:0.5"></div>
+  <div class="star star-bright" style="left:22%;top:80%;width:1px;height:1px;opacity:0.7"></div>
+  <div class="star" style="left:42%;top:78%;width:2px;height:2px;opacity:0.4"></div>
+  <div class="star" style="left:58%;top:82%;width:1.5px;height:1.5px;opacity:0.6"></div>
+  <div class="star" style="left:73%;top:79%;width:1px;height:1px;opacity:0.55"></div>
+
+  <!-- Decorative elements -->
+  <div class="deco-top"></div>
+  <div class="deco-bot"></div>
+  <div class="ornament">◆ ◆ ◆</div>
+  <div class="corner-tl">都市 · 复仇 · 权谋</div>
+  <div class="corner-br">番茄小说 独家连载</div>
+
+  <!-- Accent symbols around token -->
+  <div class="accent" style="top:26%;left:14%;">✦</div>
+  <div class="accent" style="top:24%;right:14%;">✧</div>
+  <div class="accent" style="top:44%;left:6%;">✦</div>
+  <div class="accent" style="top:42%;right:6%;">✧</div>
+  <div class="accent" style="top:30%;left:8%;font-size:14px;opacity:0.3;">◈</div>
+  <div class="accent" style="top:28%;right:8%;font-size:14px;opacity:0.3;">◈</div>
+
+  <!-- Title -->
+  <div class="title-group">
+    <div class="title">执星</div>
+  </div>
+  <div class="tagline">掌 握 星 辰 的 人</div>
+  <div class="author-name">zhehz · 著</div>
+  <!-- Volume badge -->
+  <div class="volume-badge">第 一 卷</div>
+  
+  <!-- Synopsis -->
+  <div class="synopsis">
+    被家族驱逐的弃子，三年后携星辰令归来。<br>
+    江南同学会上身份反转只是开胃菜——<br>
+    真正的清算，从京城赵家<br>
+    和三年前那个雨夜的真凶开始。
+  </div>
+
+  <!-- Figure silhouette (subtle) -->
+  <div class="figure"></div>
+
+  <!-- City -->
+  <div class="city-wrap">
+    <div class="bld" style="left:3%;width:6%;height:70px;">
+      <div class="bld-windows" style="top:8px;left:3px;"></div>
+      <div class="bld-windows" style="top:20px;left:3px;"></div>
+    </div>
+    <div class="bld" style="left:12%;width:5%;height:130px;">
+      <div class="bld-windows" style="top:10px;left:2px;"></div>
+      <div class="bld-windows" style="top:22px;left:2px;"></div>
+      <div class="bld-windows" style="top:34px;left:2px;"></div>
+    </div>
+    <div class="bld" style="left:20%;width:8%;height:100px;">
+      <div class="bld-windows" style="top:12px;left:3px;"></div>
+      <div class="bld-windows" style="top:12px;left:8px;"></div>
+    </div>
+    <div class="bld" style="left:30%;width:6%;height:155px;">
+      <div class="bld-windows" style="top:10px;left:2px;"></div>
+      <div class="bld-windows" style="top:25px;left:2px;"></div>
+      <div class="bld-windows" style="top:40px;left:2px;"></div>
+    </div>
+    <div class="bld" style="left:38%;width:10%;height:180px;">
+      <div class="bld-windows" style="top:8px;left:4px;"></div>
+      <div class="bld-windows" style="top:8px;left:10px;"></div>
+      <div class="bld-windows" style="top:22px;left:4px;"></div>
+      <div class="bld-windows" style="top:22px;left:10px;"></div>
+    </div>
+    <div class="bld" style="left:50%;width:5%;height:95px;">
+      <div class="bld-windows" style="top:15px;left:2px;"></div>
+    </div>
+    <div class="bld" style="left:57%;width:7%;height:140px;">
+      <div class="bld-windows" style="top:8px;left:3px;"></div>
+      <div class="bld-windows" style="top:20px;left:3px;"></div>
+    </div>
+    <div class="bld" style="left:66%;width:6%;height:115px;">
+      <div class="bld-windows" style="top:10px;left:3px;"></div>
+    </div>
+    <div class="bld" style="left:74%;width:9%;height:165px;">
+      <div class="bld-windows" style="top:10px;left:4px;"></div>
+      <div class="bld-windows" style="top:10px;left:9px;"></div>
+      <div class="bld-windows" style="top:25px;left:4px;"></div>
+    </div>
+    <div class="bld" style="left:85%;width:6%;height:125px;">
+      <div class="bld-windows" style="top:8px;left:3px;"></div>
+      <div class="bld-windows" style="top:22px;left:3px;"></div>
+    </div>
+  </div>
+
+  <div class="fog"></div>
+</div>
+</body>
+</html>

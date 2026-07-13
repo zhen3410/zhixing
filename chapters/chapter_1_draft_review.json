@@ -1,0 +1,27 @@
+{
+  "file": "/root/novels/星辰之主/chapters/chapter_1_draft.md",
+  "platform": "fanqie",
+  "char_count": 2624,
+  "dialogue_ratio": 38.2,
+  "word_count_ok": true,
+  "dialogue_ok": false,
+  "hit_points": {
+    "shock_reaction": 2,
+    "progress_gain": 0,
+    "showoff": 6,
+    "conflict": 0
+  },
+  "hit_points_ok": true,
+  "has_cliffhanger": true,
+  "hook_type": "question",
+  "ai_voice_flags": [
+    "Repeated sentence starter: \"\"\n\n\"\" (10x)",
+    "Repeated sentence starter: \"\"孙鹏飞\" (5x)",
+    "Repeated sentence starter: \"\"\n\n孙\" (4x)",
+    "Repeated sentence starter: \"\"\n\n林\" (4x)"
+  ],
+  "ai_voice_clean": false,
+  "score": 3,
+  "max_score": 5,
+  "verdict": "REVISE"
+}

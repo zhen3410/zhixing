@@ -1,0 +1,12 @@
+# Draft files (keep only _final.md)
+*_draft.md
+
+# Backup files
+*_backup.md
+
+# Review files (too many, can regenerate)
+reviews/
+
+# OS files
+.DS_Store
+Thumbs.db
